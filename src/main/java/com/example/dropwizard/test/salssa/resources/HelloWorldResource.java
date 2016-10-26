@@ -1,4 +1,4 @@
-package com.example.dropwizard.test.salssa.resurces;
+package com.example.dropwizard.test.salssa.resources;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;

@@ -1,14 +1,21 @@
 package com.example.dropwizard.test.salssa;
 
-import com.example.dropwizard.test.salssa.resurces.HelloWorldResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.example.dropwizard.test.salssa.resources.HelloWorldResource;
 
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.dropwizard.assets.AssetsBundle;
 
 public class SalssaApp extends Application<SalssaAppConfiguration>{
 
-	public static void main(String[] args) throws Exception{
+	private static final Logger LOGGER = LoggerFactory.getLogger(SalssaApp.class);
+	 
+	public static void main(String[] args) throws Exception {
+		LOGGER.debug("Test Logging");
 		new SalssaApp().run(args);
 	}
 	
@@ -19,7 +26,7 @@ public class SalssaApp extends Application<SalssaAppConfiguration>{
 	
 	@Override
 	public void initialize(Bootstrap<SalssaAppConfiguration> bootstrap) {
-		
+		 bootstrap.addBundle(new AssetsBundle("/assets/", "/"));
 	}
 	
 	@Override

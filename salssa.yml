@@ -1,3 +1,51 @@
+server:
+  rootPath: /api/
+  applicationConnectors:
+    - type: http
+      port: 8888
+  adminConnectors:
+    - type: http
+      port: 8081
+
+logging:
+  level: INFO
+  loggers:
+    com.example.dropwizard.test.salssa: DEBUG
+    org.hibernate.SQL:
+      level: DEBUG
+    archivedLogFilenamePattern: /logs/application-%d{yyyy-MM-dd}.log.gz
+  appenders:
+    - type: console
+    - type: file
+      threshold: INFO
+      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
+      currentLogFilename: /logs/application.log
+      archivedLogFilenamePattern: /logs/application-%d{yyyy-MM-dd}-%i.log.gz
+      archivedFileCount: 5
+      timeZone: UTC
+      maxFileSize: 5MB
+
+#metrics:
+#  reporters:
+#    - type: graphite
+#      host: localhost
+#      port: 8081
+#      frequency: 10s
+      
+# Database settings.
+#database:
+
+# use the simple server factory if you only want to run on a single port
+#server:
+#  type: simple
+#  connector:
+#    type: http
+#    port: 8080
+      
+#--------------- Custom configuration ------------
+
 template: Hello, %s!
 
-defaultName: Stranger
+defaultName: Eli
+
+#-------------------------------------------------

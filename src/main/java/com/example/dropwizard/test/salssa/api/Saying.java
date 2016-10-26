@@ -5,7 +5,8 @@ import org.hibernate.validator.constraints.Length;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * POJO - immutable!
+ * Representation
+ * POJO - immutable (multiple threads in mind)!
  * {
  * 	"id": 1,
  * 	"content": "Hi!"

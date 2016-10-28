@@ -1,4 +1,4 @@
-package com.example.dropwizard.test.salssa.api.slidealbums;
+package com.example.dropwizard.test.salssa.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

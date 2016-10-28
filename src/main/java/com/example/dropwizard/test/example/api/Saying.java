@@ -1,16 +1,20 @@
-package com.example.dropwizard.test.salssa.api;
+package com.example.dropwizard.test.example.api;
 
 import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Representation
- * POJO - immutable (multiple threads in mind)!
+ * Representation class - converted from/to JSON (or other custom format) by the Jersey MessageBodyReader/MessageBodyWriter providers.
+ * Serves as a resource's request/response (application entity).
+ * Note: immutable (multiple threads in mind!)
+ * 
  * {
  * 	"id": 1,
  * 	"content": "Hi!"
  * }
+ * 
+ * Note: follows JavaBean standard.
  *
  */
 public class Saying {

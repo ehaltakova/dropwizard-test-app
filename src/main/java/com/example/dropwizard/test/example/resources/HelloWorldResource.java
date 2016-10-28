@@ -1,4 +1,4 @@
-package com.example.dropwizard.test.salssa.resources;
+package com.example.dropwizard.test.example.resources;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
@@ -9,12 +9,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.codahale.metrics.annotation.Timed;
-import com.example.dropwizard.test.salssa.api.Saying;
+import com.example.dropwizard.test.example.api.Saying;
 
 @Path("/hello-world")
 @Produces(MediaType.APPLICATION_JSON)
 public class HelloWorldResource {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(HelloWorldResource.class);
 
 	private final String template;
 	private final String defaultName;
@@ -29,6 +34,8 @@ public class HelloWorldResource {
 	@GET
     @Timed
     public Saying sayHello(@QueryParam("name") Optional<String> name) {
+		LOGGER.debug("name: " + name);
+		LOGGER.debug("Test Logging");
         final String value = String.format(template, name.orElse(defaultName));
         return new Saying(counter.incrementAndGet(), value);
     }

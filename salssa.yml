@@ -22,6 +22,12 @@ logging:
       timeZone: UTC
       maxFileSize: 10MB
 
+database:
+  driverClass: com.mysql.cj.jdbc.Driver
+  user: admin
+  password: admin
+  url: jdbc:mysql://localhost/example
+
 #metrics:
 #  reporters:
 #    - type: graphite

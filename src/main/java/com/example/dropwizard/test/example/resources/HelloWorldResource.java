@@ -34,8 +34,7 @@ public class HelloWorldResource {
 	@GET
     @Timed
     public Saying sayHello(@QueryParam("name") Optional<String> name) {
-		LOGGER.debug("name: " + name);
-		LOGGER.debug("Test Logging");
+		LOGGER.debug("sayHello");
         final String value = String.format(template, name.orElse(defaultName));
         return new Saying(counter.incrementAndGet(), value);
     }

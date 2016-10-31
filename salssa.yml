@@ -23,10 +23,10 @@ logging:
       maxFileSize: 10MB
 
 database:
-  driverClass: com.mysql.cj.jdbc.Driver
+  driverClass: org.h2.Driver
   user: admin
   password: admin
-  url: jdbc:mysql://localhost/example
+  url: jdbc:h2:./target/salssa-db
 
 #metrics:
 #  reporters:
@@ -35,9 +35,6 @@ database:
 #      port: 8081
 #      frequency: 10s
       
-# Database settings.
-#database:
-
 # use the simple server factory if you only want to run on a single port
 #server:
 #  type: simple

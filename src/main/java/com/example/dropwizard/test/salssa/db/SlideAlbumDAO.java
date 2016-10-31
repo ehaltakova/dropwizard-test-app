@@ -1,14 +1,15 @@
 package com.example.dropwizard.test.salssa.db;
 
-import java.util.List;
-
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
+import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import com.example.dropwizard.test.salssa.api.SlideAlbum;
 
+@RegisterMapper(SlideAlbumMapper.class)
 public interface SlideAlbumDAO {
 	
-	@SqlQuery("select * from slidealbums where customer in (= :customers)")
-	List<SlideAlbum> getSlideAlbums(@Bind("customers") List<String> customers);
+	@SqlQuery("select * from slidealbum join slidealbumfile on files = slidealbumfile.id where title = :title and customer = :customer")
+	SlideAlbum getSlideAlbum(@Bind("title") String title, @Bind("customer") String customer);
+
 }

@@ -28,7 +28,7 @@ public class SalssaApp extends Application<SalssaAppConfiguration>{
 	@Override
 	public void initialize(Bootstrap<SalssaAppConfiguration> bootstrap) {
 		bootstrap.addBundle(new AssetsBundle("/assets/", "/"));
-		bootstrap.addBundle(new DBIExceptionsBundle()); // unwrap any thrown SQLException or DBIException instances automatically!
+		bootstrap.addBundle(new DBIExceptionsBundle()); // unwrap any thrown SQLException or DBIException instances automatically 		
 		bootstrap.addBundle(new MigrationsBundle<SalssaAppConfiguration>() {
 			public DataSourceFactory getDataSourceFactory(SalssaAppConfiguration configuration) {
 				return configuration.getDataSourceFactory();

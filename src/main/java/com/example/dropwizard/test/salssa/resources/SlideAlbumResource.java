@@ -2,6 +2,7 @@ package com.example.dropwizard.test.salssa.resources;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -28,8 +29,17 @@ public class SlideAlbumResource {
 	@GET
     @Timed
     public SlideAlbum getSlideAlbum(@QueryParam("title") String title, @QueryParam("customer") String customer) {
-		LOGGER.debug("get slidealbum: " + title);
+		LOGGER.debug("get slidealbum by title: " + title);
 		SlideAlbum slidealbum = dao.getSlideAlbum(title, customer);
+		return slidealbum;
+	}
+	
+	@GET
+	@Path("{id}")
+    @Timed
+    public SlideAlbum getSlideAlbumById(@PathParam("id") long id) {
+		LOGGER.debug("get slidealbum by id : " + id);
+		SlideAlbum slidealbum = dao.getSlideAlbumById(id);
 		return slidealbum;
 	}
 }

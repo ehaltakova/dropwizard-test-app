@@ -6,8 +6,8 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
- 	<changeSet id="1" author="sa">
-        <createTable tableName="slidealbumFile">
+ 	<changeSet id="create_table_file" author="salssa_admin">
+        <createTable tableName="file">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -20,7 +20,7 @@
         </createTable>
     </changeSet>
     
-    <changeSet id="2" author="sa">
+    <changeSet id="create_table_slidealbum" author="salssa_admin">
         <createTable tableName="slidealbum">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -37,39 +37,110 @@
             <column name="modificationDate" type="bigint">
             	<constraints nullable="false"/>
             </column>
-            <column name="files" type="bigint">
-            	<constraints nullable="false"/>
-            </column>
-            <column name="locked" type="boolean" />
+            <column name="locked" type="varchar(255)" />
         </createTable>
     </changeSet>
     
-    <changeSet id="3" author="sa">
-        <addForeignKeyConstraint baseColumnNames="files"
-            baseTableName="slidealbum"
+    <changeSet id="create_table_slidealbum_file" author="salssa_admin">
+        <createTable tableName="slidealbumFile">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="slidealbum_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+             <column name="file_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    
+    <changeSet id="fk_slidealbum" author="salssa_admin">
+        <addForeignKeyConstraint baseColumnNames="slidealbum_id"
+            baseTableName="slidealbumFile"
             constraintName="fk_slidealbum_slidealbumFile"
             onDelete="CASCADE"
             onUpdate="RESTRICT"
             referencedColumnNames="id"
-            referencedTableName="slidealbumFile"/>
+            referencedTableName="slidealbum"/>
     </changeSet> 
     
-    <changeSet author="sa" id="4">
+     <changeSet id="fk_file" author="salssa_admin">
+         <addForeignKeyConstraint baseColumnNames="file_id"
+            baseTableName="slidealbumFile"
+            constraintName="fk_file_slidealbumFile"
+            onDelete="CASCADE"
+            onUpdate="RESTRICT"
+            referencedColumnNames="id"
+            referencedTableName="file"/>
+    </changeSet> 
+    
+    <changeSet id="insert_file_1" author="salssa_admin">
 	    <insert dbms="h2, oracle"
-	            tableName="slidealbumFile">
+	            tableName="file">
 	        <column name="name" type="varchar(255)" value="Anti-lock Brake System (ABS)_01"/>
 	        <column name="ext" type="varchar(255)" value="svg"/>
 	    </insert>
 	</changeSet>
 	
-	 <changeSet author="sa" id="5">
+	 <changeSet id="insert_slidealbum_1" author="salssa_admin">
 	    <insert dbms="h2, oracle"
 	            tableName="slidealbum">
 	        <column name="title" type="varchar(255)" value="1234"/>
 	        <column name="customer" type="varchar(255)" value="Bosch"/>
 	        <column name="svg" type="varchar(255)" value="Anti-lock Brake System (ABS)_01"/>
 	        <column name="modificationDate" type="bigint" value="1476730042431"/>
-	        <column name="files" type="bigint" value="1"/>
 	    </insert>
 	</changeSet>
+	
+	 <changeSet id="insert_slidealbum_file_1" author="salssa_admin">
+	    <insert dbms="h2, oracle"
+	            tableName="slidealbumFile">
+	        <column name="file_id" type="bigint" value="1"/>
+	        <column name="slidealbum_id" type="bigint" value="1"/>
+	    </insert>
+	</changeSet>
+	
+	<changeSet id="insert_file_2_1" author="salssa_admin">
+	    <insert dbms="h2, oracle"
+	            tableName="file">
+	        <column name="name" type="varchar(255)" value="Anti-lock Brake System (ABS)_01"/>
+	        <column name="ext" type="varchar(255)" value="svg"/>
+	    </insert>
+	</changeSet>
+	
+	<changeSet id="insert_file_2_2" author="salssa_admin">
+	    <insert dbms="h2, oracle"
+	            tableName="file">
+	        <column name="name" type="varchar(255)" value="Anti-lock Brake System (ABS)_01.svg"/>
+	        <column name="ext" type="varchar(255)" value="xml"/>
+	    </insert>
+	</changeSet>
+	
+	 <changeSet id="insert_slidealbum_2" author="salssa_admin">
+	    <insert dbms="h2, oracle"
+	            tableName="slidealbum">
+	        <column name="title" type="varchar(255)" value="4567"/>
+	        <column name="customer" type="varchar(255)" value="Harley Davidson"/>
+	        <column name="svg" type="varchar(255)" value="Anti-lock Brake System (ABS)_01"/>
+	        <column name="modificationDate" type="bigint" value="1475744848984"/>
+	    </insert>
+	</changeSet>
+	
+	 <changeSet id="insert_slidealbum_file_2_1" author="salssa_admin">
+	    <insert dbms="h2, oracle"
+	            tableName="slidealbumFile">
+	        <column name="file_id" type="bigint" value="2"/>
+	        <column name="slidealbum_id" type="bigint" value="2"/>
+	    </insert>
+	</changeSet>
+	 <changeSet id="insert_slidealbum_file_2_2" author="salssa_admin">
+	    <insert dbms="h2, oracle"
+	            tableName="slidealbumFile">
+	        <column name="file_id" type="bigint" value="3"/>
+	        <column name="slidealbum_id" type="bigint" value="2"/>
+	    </insert>
+	</changeSet>
+    
 </databaseChangeLog>

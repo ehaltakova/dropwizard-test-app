@@ -1,5 +1,11 @@
 package com.example.dropwizard.test.salssa;
 
+import java.util.EnumSet;
+
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
+
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.skife.jdbi.v2.DBI;
 
 import com.example.dropwizard.test.salssa.api.SlideAlbum;
@@ -58,6 +64,13 @@ public class SalssaApp extends Application<SalssaAppConfiguration>{
 	
 	@Override
 	public void run(SalssaAppConfiguration configuration, Environment environment) throws Exception {
+	
+		// enable CORS
+		final FilterRegistration.Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
+		cors.setInitParameter("allowedOrigins", "*");
+		cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Origin");
+		cors.setInitParameter("allowedMethods", "OPTIONS,GET,PUT,POST,DELETE,HEAD");
+		cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
 		
 		// db access
 		final DBIFactory factory = new DBIFactory();
@@ -68,7 +81,6 @@ public class SalssaApp extends Application<SalssaAppConfiguration>{
 		// register resources
 		environment.jersey().register(new SlideAlbumResource(dao));
 		environment.jersey().register(new SlideAlbumsResource(dao));
-		
 		environment.jersey().register(new SimpleSlideAlbumResource(simpleDao));
 		environment.jersey().register(new SimpleSlideAlbumsResource(simpleDao));
 	}

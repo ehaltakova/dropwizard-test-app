@@ -8,7 +8,7 @@ import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
 import com.example.dropwizard.test.salssa.api.SlideAlbum;
 
-public class SlideAlbumMapper implements ResultSetMapper<SlideAlbum> {
+public class SlideAlbumSimpleMapper implements ResultSetMapper<SlideAlbum> {
   
 	public SlideAlbum map(int index, ResultSet r, StatementContext ctx) throws SQLException {
     

@@ -4,6 +4,7 @@ import org.skife.jdbi.v2.DBI;
 
 import com.example.dropwizard.test.salssa.db.SlideAlbumDAO;
 import com.example.dropwizard.test.salssa.resources.SlideAlbumResource;
+import com.example.dropwizard.test.salssa.resources.SlideAlbumsResource;
 
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
@@ -44,9 +45,11 @@ public class SalssaApp extends Application<SalssaAppConfiguration>{
 		final DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "h2");
 		SlideAlbumDAO dao = jdbi.onDemand(SlideAlbumDAO.class); // obtain and release connecion automatically
 		
-		// register resource
-		final SlideAlbumResource resource = new SlideAlbumResource(dao, "1234", "Bosch");
-		environment.jersey().register(resource);
+		// register resources
+		final SlideAlbumResource resource1 = new SlideAlbumResource(dao);
+		environment.jersey().register(resource1);
+		final SlideAlbumsResource resource2 = new SlideAlbumsResource(dao);
+		environment.jersey().register(resource2);
 	}
 
 }

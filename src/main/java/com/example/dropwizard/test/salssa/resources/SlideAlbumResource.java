@@ -22,7 +22,7 @@ public class SlideAlbumResource {
 
 	private final SlideAlbumDAO dao;
 	
-	public SlideAlbumResource(SlideAlbumDAO dao, String title, String customer) {
+	public SlideAlbumResource(SlideAlbumDAO dao) {
 		this.dao = dao;
 	}
 	

@@ -48,4 +48,9 @@ public class SlideAlbumResource {
 		LOGGER.debug("slidealbum: " + slidealbum);
 		return slidealbum;
 	}
+	
+	// NOTE: use of the @UnitOfWork annotation will do the following:
+	// automatically open a session, begin a transaction, call corresponding dao method, 
+	// commit the transaction, and finally close the session. 
+	// If an exception is thrown, the transaction is rolled back.
 }

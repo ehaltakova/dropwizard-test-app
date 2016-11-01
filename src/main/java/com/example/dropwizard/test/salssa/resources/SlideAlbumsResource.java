@@ -14,6 +14,8 @@ import com.codahale.metrics.annotation.Timed;
 import com.example.dropwizard.test.salssa.api.SlideAlbum;
 import com.example.dropwizard.test.salssa.db.SlideAlbumDAO;
 
+import io.dropwizard.hibernate.UnitOfWork;
+
 @Path("/slidealbums")
 @Produces(MediaType.APPLICATION_JSON)
 public class SlideAlbumsResource {
@@ -28,6 +30,7 @@ public class SlideAlbumsResource {
 	
 	@GET
     @Timed
+    @UnitOfWork
     public List<SlideAlbum> getSlideAlbums() {
 		LOGGER.debug("get slidealbums");
 		List<SlideAlbum> slidealbums = dao.getSlideAlbums();

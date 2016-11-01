@@ -2,22 +2,30 @@ package com.example.dropwizard.test.salssa.db;
 
 import java.util.List;
 
-import org.skife.jdbi.v2.sqlobject.Bind;
-import org.skife.jdbi.v2.sqlobject.SqlQuery;
-import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 
 import com.example.dropwizard.test.salssa.api.SlideAlbum;
+import io.dropwizard.hibernate.AbstractDAO;
 
-@RegisterMapper(SlideAlbumSimpleMapper.class)
-public interface SlideAlbumDAO {
+// AbstractDAO class contains type-safe wrappers for most of SessionFactory‘s common operations
+public class SlideAlbumDAO extends AbstractDAO<SlideAlbum> {
+
+	public SlideAlbumDAO(SessionFactory sessionFactory) {
+		super(sessionFactory);
+	}
+
+	public SlideAlbum getSlideAlbum(String title, String customer) {
+		Criteria criteria = criteria().add(Restrictions.eq("title", title)).add(Restrictions.eq("customer", customer));
+		return uniqueResult(criteria);
+	}
 	
-	@SqlQuery("select * from slidealbum where title = :title and customer = :customer")
-	SlideAlbum getSlideAlbum(@Bind("title") String title, @Bind("customer") String customer);
+	public SlideAlbum getSlideAlbumById(Long id) {
+		return get(id);
+	}
 
-	@SqlQuery("select * from slidealbum where id = :id")
-	SlideAlbum getSlideAlbumById(@Bind("id") long id);
-
-	@SqlQuery("select * from slidealbum")
-	List<SlideAlbum> getSlideAlbums();
-
+	public List<SlideAlbum> getSlideAlbums() {
+		return list(namedQuery("com.example.dropwizard.test.salssa.api.SlideAlbum.getSlideAlbums"));
+	}
 }

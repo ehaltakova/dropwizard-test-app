@@ -14,6 +14,9 @@ import com.codahale.metrics.annotation.Timed;
 import com.example.dropwizard.test.salssa.api.SlideAlbum;
 import com.example.dropwizard.test.salssa.db.SlideAlbumDAO;
 
+import io.dropwizard.hibernate.UnitOfWork;
+
+
 @Path("/slidealbum")
 @Produces(MediaType.APPLICATION_JSON)
 public class SlideAlbumResource {
@@ -28,6 +31,7 @@ public class SlideAlbumResource {
 	
 	@GET
     @Timed
+    @UnitOfWork
     public SlideAlbum getSlideAlbum(@QueryParam("title") String title, @QueryParam("customer") String customer) {
 		LOGGER.debug("get slidealbum by title: " + title);
 		SlideAlbum slidealbum = dao.getSlideAlbum(title, customer);
@@ -37,9 +41,11 @@ public class SlideAlbumResource {
 	@GET
 	@Path("{id}")
     @Timed
+    @UnitOfWork
     public SlideAlbum getSlideAlbumById(@PathParam("id") long id) {
 		LOGGER.debug("get slidealbum by id : " + id);
 		SlideAlbum slidealbum = dao.getSlideAlbumById(id);
+		LOGGER.debug("slidealbum: " + slidealbum);
 		return slidealbum;
 	}
 }

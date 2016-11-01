@@ -1,6 +1,7 @@
 package com.example.dropwizard.test.salssa;
 
 import java.util.EnumSet;
+import java.util.Map;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
@@ -20,8 +21,10 @@ import com.example.dropwizard.test.salssa.resources.SlideAlbumsResource;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.dropwizard.views.ViewBundle;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.db.DataSourceFactory;
+import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.jdbi.bundles.DBIExceptionsBundle;
@@ -48,18 +51,27 @@ public class SalssaApp extends Application<SalssaAppConfiguration>{
 	
 	@Override
 	public void initialize(Bootstrap<SalssaAppConfiguration> bootstrap) {
-		// static files
+		// static files serving support
 		bootstrap.addBundle(new AssetsBundle("/assets/", "/"));
-		// JDBI management
+		// JDBI support
 		bootstrap.addBundle(new DBIExceptionsBundle()); // unwrap any thrown SQLException or DBIException instances automatically 		
-		// migrations management
+		// migrations support
 		bootstrap.addBundle(new MigrationsBundle<SalssaAppConfiguration>() {
 			public DataSourceFactory getDataSourceFactory(SalssaAppConfiguration configuration) {
 				return configuration.getDataSourceFactory();
 			}
 		});
-		// hibernate bundle		
+		// hibernate support		
 		bootstrap.addBundle(hibernateBundle);
+		// multi-part forms support 
+		bootstrap.addBundle(new MultiPartBundle());
+		// mustache view template support
+		bootstrap.addBundle(new ViewBundle<SalssaAppConfiguration>() {
+			@Override
+			public Map<String, Map<String, String>> getViewConfiguration(SalssaAppConfiguration configuration) {
+				return configuration.getViewRendererConfiguration();
+			}
+		});
 	}
 	
 	@Override

@@ -13,12 +13,13 @@ import org.slf4j.LoggerFactory;
 import com.codahale.metrics.annotation.Timed;
 import com.example.dropwizard.test.salssa.api.SlideAlbum;
 import com.example.dropwizard.test.salssa.db.SlideAlbumDAO;
+import com.example.dropwizard.test.salssa.views.SlideAlbumView;
 
 import io.dropwizard.hibernate.UnitOfWork;
 
 
 @Path("/slidealbum")
-@Produces(MediaType.APPLICATION_JSON)
+@Produces(MediaType.TEXT_HTML)
 public class SlideAlbumResource {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SlideAlbumResource.class);
@@ -32,25 +33,24 @@ public class SlideAlbumResource {
 	@GET
     @Timed
     @UnitOfWork
-    public SlideAlbum getSlideAlbum(@QueryParam("title") String title, @QueryParam("customer") String customer) {
+    public SlideAlbumView getSlideAlbum(@QueryParam("title") String title, @QueryParam("customer") String customer) {
 		LOGGER.debug("get slidealbum by title: " + title);
 		SlideAlbum slidealbum = dao.getSlideAlbum(title, customer);
-		return slidealbum;
+		return new SlideAlbumView(slidealbum);
 	}
 	
 	@GET
 	@Path("{id}")
     @Timed
     @UnitOfWork
-    public SlideAlbum getSlideAlbumById(@PathParam("id") long id) {
+    public SlideAlbumView getSlideAlbumById(@PathParam("id") long id) {
 		LOGGER.debug("get slidealbum by id : " + id);
 		SlideAlbum slidealbum = dao.getSlideAlbumById(id);
 		LOGGER.debug("slidealbum: " + slidealbum);
-		return slidealbum;
+		return new SlideAlbumView(slidealbum);
 	}
 	
 	// NOTE: use of the @UnitOfWork annotation will do the following:
 	// automatically open a session, begin a transaction, call corresponding dao method, 
-	// commit the transaction, and finally close the session. 
-	// If an exception is thrown, the transaction is rolled back.
+	// commit the transaction, and finally close the session. If an exception is thrown, the transaction is rolled back.
 }

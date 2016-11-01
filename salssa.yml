@@ -28,6 +28,9 @@ database:
   password: admin
   url: jdbc:h2:./target/salssa-db
 
+#viewRendererConfiguration:
+ 
+
 #metrics:
 #  reporters:
 #    - type: graphite

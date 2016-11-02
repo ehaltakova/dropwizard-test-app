@@ -17,7 +17,6 @@ import com.example.dropwizard.test.salssa.views.SlideAlbumView;
 
 import io.dropwizard.hibernate.UnitOfWork;
 
-
 @Path("/slidealbum")
 @Produces(MediaType.TEXT_HTML)
 public class SlideAlbumResource {

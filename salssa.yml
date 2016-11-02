@@ -47,8 +47,7 @@ database:
       
 #--------------- Custom configuration ------------
 
-template: Hello, %s!
+authApiUrl: http://localhost:1818/SALSSA2-API/api/auth
 
-defaultName: Eli
 
 #-------------------------------------------------

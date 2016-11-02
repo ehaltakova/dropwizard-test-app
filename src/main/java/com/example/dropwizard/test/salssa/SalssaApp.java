@@ -5,7 +5,9 @@ import java.util.Map;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
+import javax.ws.rs.client.Client;
 
+import org.apache.http.client.HttpClient;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.skife.jdbi.v2.DBI;
 
@@ -13,6 +15,8 @@ import com.example.dropwizard.test.salssa.api.SlideAlbum;
 import com.example.dropwizard.test.salssa.api.SlideAlbumFile;
 import com.example.dropwizard.test.salssa.db.SimpleSlideAlbumDAO;
 import com.example.dropwizard.test.salssa.db.SlideAlbumDAO;
+import com.example.dropwizard.test.salssa.resources.IndexResource;
+import com.example.dropwizard.test.salssa.resources.LoginResource;
 import com.example.dropwizard.test.salssa.resources.SimpleSlideAlbumResource;
 import com.example.dropwizard.test.salssa.resources.SimpleSlideAlbumsResource;
 import com.example.dropwizard.test.salssa.resources.SlideAlbumResource;
@@ -23,6 +27,9 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
 import io.dropwizard.assets.AssetsBundle;
+import io.dropwizard.client.HttpClientBuilder;
+import io.dropwizard.client.JerseyClientBuilder;
+import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
@@ -77,13 +84,21 @@ public class SalssaApp extends Application<SalssaAppConfiguration>{
 	@Override
 	public void run(SalssaAppConfiguration configuration, Environment environment) throws Exception {
 	
+		// http client
+		HttpClient httpClient = new HttpClientBuilder(environment).using(configuration.getHttpClientConfiguration()).build("salssaClient");
+
+		// jersey http client
+		JerseyClientConfiguration jerseyClientConfig = configuration.getJerseyClientConfiguration();
+		jerseyClientConfig.setGzipEnabledForRequests(false);
+		final Client client = new JerseyClientBuilder(environment).using(jerseyClientConfig).build("salssaJerseyClient");
+		
 		// enable CORS
 		final FilterRegistration.Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
 		cors.setInitParameter("allowedOrigins", "*");
 		cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Origin");
 		cors.setInitParameter("allowedMethods", "OPTIONS,GET,PUT,POST,DELETE,HEAD");
 		cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
-		
+
 		// db access
 		final DBIFactory factory = new DBIFactory();
 		final DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "h2"); // creates managed DBI instance + health check for connectivity
@@ -95,6 +110,8 @@ public class SalssaApp extends Application<SalssaAppConfiguration>{
 		environment.jersey().register(new SlideAlbumsResource(dao));
 		environment.jersey().register(new SimpleSlideAlbumResource(simpleDao));
 		environment.jersey().register(new SimpleSlideAlbumsResource(simpleDao));
+		environment.jersey().register(new LoginResource(client, configuration, httpClient));
+		environment.jersey().register(new IndexResource());
 	}
 
 }

@@ -11,6 +11,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableMap;
 
 import io.dropwizard.Configuration;
+import io.dropwizard.client.HttpClientConfiguration;
+import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.db.DataSourceFactory;
 
 public class SalssaAppConfiguration extends Configuration { 
@@ -22,31 +24,15 @@ public class SalssaAppConfiguration extends Configuration {
 	@NotNull
     private Map<String, Map<String, String>> viewRendererConfiguration = Collections.emptyMap();
 	
-	@NotEmpty
-	private String template;
-	
-	@NotEmpty
-	private String defaultName = "Eli"; 
+	@JsonProperty
+	private HttpClientConfiguration httpClientConfig = new HttpClientConfiguration();
 	
 	@JsonProperty
-    public String getTemplate() {
-        return template;
-    }
-
-    @JsonProperty
-    public void setTemplate(String template) {
-        this.template = template;
-    }
-
-    @JsonProperty
-    public String getDefaultName() {
-        return defaultName;
-    }
-
-    @JsonProperty
-    public void setDefaultName(String name) {
-        this.defaultName = name;
-    }
+	private JerseyClientConfiguration jerseyClientConfig = new JerseyClientConfiguration();
+	
+	@NotEmpty
+	private String authApiUrl; 
+	
     
     @JsonProperty("database")
     public void setDataSourceFactory(DataSourceFactory factory) {
@@ -57,6 +43,21 @@ public class SalssaAppConfiguration extends Configuration {
     public DataSourceFactory getDataSourceFactory() {
         return database;
     }
+    
+    @JsonProperty("httpClient")
+    public HttpClientConfiguration getHttpClientConfiguration() {
+		return httpClientConfig;
+	}
+    
+    @JsonProperty("jerseyClient")
+    public JerseyClientConfiguration getJerseyClientConfiguration() {
+        return this.jerseyClientConfig;
+    }
+    
+    @JsonProperty("httpClient")
+    public void setHttpClientConfiguration(HttpClientConfiguration httpClientConfig) {
+    	this.httpClientConfig = httpClientConfig;
+	}
     
     @JsonProperty("viewRendererConfiguration")
     public Map<String, Map<String, String>> getViewRendererConfiguration() {
@@ -71,5 +72,14 @@ public class SalssaAppConfiguration extends Configuration {
         }
         this.viewRendererConfiguration = builder.build();
     }
-    
+
+    @JsonProperty
+    public String getAuthApiUrl() {
+        return authApiUrl;
+    }
+
+    @JsonProperty
+    public void setAuthApiUrl(String authApiUrl) {
+        this.authApiUrl = authApiUrl;
+    }
 }

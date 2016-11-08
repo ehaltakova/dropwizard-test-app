@@ -28,6 +28,10 @@ database:
   password: admin
   url: jdbc:h2:./target/salssa-db
 
+jerseyClientConfig:
+ maxThreads: 128
+ gzipEnabledForRequests: false
+ 
 #viewRendererConfiguration:
  
 

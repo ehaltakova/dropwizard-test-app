@@ -20,20 +20,16 @@ public class SalssaAppConfiguration extends Configuration {
 	@Valid
 	@NotNull
 	private DataSourceFactory database = new DataSourceFactory();
-	
 	@NotNull
     private Map<String, Map<String, String>> viewRendererConfiguration = Collections.emptyMap();
-	
 	@JsonProperty
 	private HttpClientConfiguration httpClientConfig = new HttpClientConfiguration();
-	
 	@JsonProperty
 	private JerseyClientConfiguration jerseyClientConfig = new JerseyClientConfiguration();
 	
 	@NotEmpty
 	private String authApiUrl; 
 	
-    
     @JsonProperty("database")
     public void setDataSourceFactory(DataSourceFactory factory) {
         this.database = factory;

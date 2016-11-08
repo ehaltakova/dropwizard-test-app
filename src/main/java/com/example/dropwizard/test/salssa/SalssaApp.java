@@ -89,7 +89,6 @@ public class SalssaApp extends Application<SalssaAppConfiguration>{
 
 		// jersey http client
 		JerseyClientConfiguration jerseyClientConfig = configuration.getJerseyClientConfiguration();
-		jerseyClientConfig.setGzipEnabledForRequests(false);
 		final Client client = new JerseyClientBuilder(environment).using(jerseyClientConfig).build("salssaJerseyClient");
 		
 		// enable CORS
@@ -101,7 +100,7 @@ public class SalssaApp extends Application<SalssaAppConfiguration>{
 
 		// db access
 		final DBIFactory factory = new DBIFactory();
-		final DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "h2"); // creates managed DBI instance + health check for connectivity
+		final DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "h2"); // creates managed instrumented DBI instance + health check for connectivity
 		SimpleSlideAlbumDAO simpleDao = jdbi.onDemand(SimpleSlideAlbumDAO.class); // obtain and release connection automatically
 		SlideAlbumDAO dao = new SlideAlbumDAO(hibernateBundle.getSessionFactory());
 		
@@ -111,7 +110,7 @@ public class SalssaApp extends Application<SalssaAppConfiguration>{
 		environment.jersey().register(new SimpleSlideAlbumResource(simpleDao));
 		environment.jersey().register(new SimpleSlideAlbumsResource(simpleDao));
 		environment.jersey().register(new LoginResource(client, configuration, httpClient));
-		environment.jersey().register(new IndexResource());
+		environment.jersey().register(new IndexResource());	
 	}
 
 }

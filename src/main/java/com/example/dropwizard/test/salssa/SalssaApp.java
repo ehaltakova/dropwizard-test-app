@@ -39,55 +39,22 @@ import io.dropwizard.migrations.MigrationsBundle;
 
 public class SalssaApp extends Application<SalssaAppConfiguration>{
 	
-	// create a new managed connection pool to the database, a health check for connectivity to the database, 
-	// and a new SessionFactory instance for you to use in the DAO class
-	HibernateBundle<SalssaAppConfiguration> hibernateBundle = new HibernateBundle<SalssaAppConfiguration>(SlideAlbum.class, SlideAlbumFile.class) { // mapped classes here, not in config!
-		public DataSourceFactory getDataSourceFactory(SalssaAppConfiguration configuration) {
-			return configuration.getDataSourceFactory();
-		}
-	};
-	
 	public static void main(String[] args) throws Exception {
 		new SalssaApp().run(args);
 	}
 	
 	@Override
 	public String getName() {
-		return "salssa"; // the name of the yaml file?
-	}
-	
-	@Override
-	public void initialize(Bootstrap<SalssaAppConfiguration> bootstrap) {
-		// static files serving support
-		bootstrap.addBundle(new AssetsBundle("/assets/", "/"));
-		// JDBI support
-		bootstrap.addBundle(new DBIExceptionsBundle()); // unwrap any thrown SQLException or DBIException instances automatically 		
-		// migrations support
-		bootstrap.addBundle(new MigrationsBundle<SalssaAppConfiguration>() {
-			public DataSourceFactory getDataSourceFactory(SalssaAppConfiguration configuration) {
-				return configuration.getDataSourceFactory();
-			}
-		});
-		// hibernate support		
-		bootstrap.addBundle(hibernateBundle);
-		// multi-part forms support 
-		bootstrap.addBundle(new MultiPartBundle());
-		// mustache view template support
-		bootstrap.addBundle(new ViewBundle<SalssaAppConfiguration>() {
-			@Override
-			public Map<String, Map<String, String>> getViewConfiguration(SalssaAppConfiguration configuration) {
-				return configuration.getViewRendererConfiguration();
-			}
-		});
+		return "salssa";
 	}
 	
 	@Override
 	public void run(SalssaAppConfiguration configuration, Environment environment) throws Exception {
 	
-		// http client
+		// http client - managed, instrumented instance
 		HttpClient httpClient = new HttpClientBuilder(environment).using(configuration.getHttpClientConfiguration()).build("salssaClient");
 
-		// jersey http client
+		// jersey http client - managed, instrumented instance
 		JerseyClientConfiguration jerseyClientConfig = configuration.getJerseyClientConfiguration();
 		final Client client = new JerseyClientBuilder(environment).using(jerseyClientConfig).build("salssaJerseyClient");
 		
@@ -100,7 +67,8 @@ public class SalssaApp extends Application<SalssaAppConfiguration>{
 
 		// db access
 		final DBIFactory factory = new DBIFactory();
-		final DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "h2"); // creates managed instrumented DBI instance + health check for connectivity
+		// creates managed instrumented DBI instance + health check for connectivity
+		final DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "h2"); 
 		SimpleSlideAlbumDAO simpleDao = jdbi.onDemand(SimpleSlideAlbumDAO.class); // obtain and release connection automatically
 		SlideAlbumDAO dao = new SlideAlbumDAO(hibernateBundle.getSessionFactory());
 		
@@ -112,5 +80,43 @@ public class SalssaApp extends Application<SalssaAppConfiguration>{
 		environment.jersey().register(new LoginResource(client, configuration, httpClient));
 		environment.jersey().register(new IndexResource());	
 	}
-
+	
+	// create a new managed connection pool to the database, a health check for connectivity to the database, 
+	// and a new SessionFactory instance for you to use in the DAO class
+	HibernateBundle<SalssaAppConfiguration> hibernateBundle = new HibernateBundle<SalssaAppConfiguration>(SlideAlbum.class, SlideAlbumFile.class) { // mapped classes here, not in config!
+		public DataSourceFactory getDataSourceFactory(SalssaAppConfiguration configuration) {
+			return configuration.getDataSourceFactory();
+		}
+	};
+		
+	@Override
+	public void initialize(Bootstrap<SalssaAppConfiguration> bootstrap) {
+		
+		// static files serving
+		bootstrap.addBundle(new AssetsBundle("/assets/", "/"));
+		
+		// JDBI
+		bootstrap.addBundle(new DBIExceptionsBundle()); // unwrap any thrown SQLException or DBIException instances automatically 		
+		
+		// migrations support
+		bootstrap.addBundle(new MigrationsBundle<SalssaAppConfiguration>() {
+			public DataSourceFactory getDataSourceFactory(SalssaAppConfiguration configuration) {
+				return configuration.getDataSourceFactory();
+			}
+		});
+		
+		// Hibernate 		
+		bootstrap.addBundle(hibernateBundle);
+		
+		// multi-part forms support 
+		bootstrap.addBundle(new MultiPartBundle());
+		
+		// Mustache view templates 
+		bootstrap.addBundle(new ViewBundle<SalssaAppConfiguration>() {
+			@Override
+			public Map<String, Map<String, String>> getViewConfiguration(SalssaAppConfiguration configuration) {
+				return configuration.getViewRendererConfiguration();
+			}
+		});
+	}
 }

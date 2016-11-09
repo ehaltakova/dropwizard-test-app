@@ -19,7 +19,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Slide Album Hibernate class.
- * Uses Builder pattern.
  * @author Elitza Haltakova
  *
  */

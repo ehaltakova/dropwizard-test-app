@@ -33,7 +33,6 @@ jerseyClientConfig:
  gzipEnabledForRequests: false
  
 #viewRendererConfiguration:
- 
 
 #metrics:
 #  reporters:
